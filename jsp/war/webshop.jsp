@@ -8,6 +8,10 @@
 		<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
 		<title>webshop</title>
 		<style>
+		body {
+			background: url("images/header-auto.jpg") no-repeat;
+			background-size: 100vw 100vh;
+		}
 		div.autokader {
     float: left;	
     margin: 1em;
@@ -18,10 +22,11 @@
     font-weight: bold;
     text-decoration: none;
     position: relative;
-    background: -webkit-linear-gradient(right, rgba(127, 127, 127, 0), rgba(127, 127, 127, 1)); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(left, rgba(127, 127, 127, 0), rgba(127, 127, 127, 1)); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(left, rgba(127, 127, 127, 0), rgba(127, 127, 127, 1)); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(to left, rgba(127, 127, 127, 0), rgba(127, 127, 127, 1)); /* Standard syntax (must be last) */
+    background: -webkit-linear-gradient(right, rgba(127, 127, 127, 0.5), rgba(127, 127, 127, 1)); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(left, rgba(127, 127, 127, 0.5), rgba(127, 127, 127, 1)); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(left, rgba(127, 127, 127, 0.5), rgba(127, 127, 127, 1)); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to left, rgba(127, 127, 127, 0.5), rgba(127, 127, 127, 1)); /* Standard syntax (must be last) */
+    cursor: pointer;
 
 }
 
@@ -31,12 +36,14 @@ div.autokader img {
     position: absolute;
     bottom: 0;
     left: 0;
+    height: 100px;
 }
 
 div.autokader p.merktype {
     color: #FFF8DC;
     background-color: green;
     text-align: center;
+    margin: 0;
 }
 
 div.autokader p.prijs {
@@ -64,6 +71,7 @@ p#url {
 	top: 25px;
 	width: 100px;
 	height: 100px;
+	cursor: pointer;
 }
 iframe {
 	text-align: center;
@@ -75,24 +83,28 @@ iframe {
 div#autoselectie {
     max-width: 1200px;
 }</style>
+<%
+AutoLijst autolijst = new AutoLijst();
+		ArrayList<Auto> auto = autolijst.getLijst();%>
 	</head>
+    	<a href="http://thomas-portfolio.appspot.com/">portfolio</a>
 	<body>
 	<div id="iframe-mask">
 		<img id="mask-exit" src="images/cancel.png"></img>
 		<iframe width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
 	</div>
 		<form action="webshop.jsp" method= "get">
-			<input type="number" name="minprijs">
-			<input type="number" name="maxprijs">
+			<input type="number" name="minprijs" placeholder="Minimum prijs">
+			<input type="number" name="maxprijs" placeholder="Maximale prijs">
 			<select name="merk">
          		<option value="alle">Alle merken</option>
-	            <option value="Ford">Ford</option>
-	            <option value="Opel">Opel</option>
-	            <option value="Subaru">Subaru</option>
-	            <option value="Mercedes">Mercedes</option>
-	            <option value="Ferrari">Ferrari</option>
-	            <option value="Citroen">Citroen</option>
-	            <option value="Mini">Mini</option>
+	            <%
+	            for (String merk : autolijst.getMerken()){
+	            	%>
+	            	<option value=<%= merk %>><%= merk %></option>
+	            	<%
+	            }
+	            %>
         	</select>
 			<input type="submit" value="ok" name="ok">
 		</form>
@@ -100,8 +112,7 @@ div#autoselectie {
 		<%
 		int minprijs= 0;
 		int maxprijs= 1000000;
-		AutoLijst autolijst = new AutoLijst();
-		ArrayList<Auto> auto = autolijst.getLijst();
+		
 		
 		if (request.getParameter("ok") == null) {
 			for (Auto autos : auto){
@@ -116,13 +127,13 @@ div#autoselectie {
 			}
 		} else {
 			try {
-				if (request.getParameter("minprijs") == null || request.getParameter("minprijs").equals("")){
+				if (request.getParameter("minprijs").equals("")){
 					minprijs = 0;
 				} else {
 					minprijs = Integer.parseInt(request.getParameter("minprijs"));
 				}
 				
-				if (request.getParameter("maxprijs") == null || request.getParameter("maxprijs").equals("")){
+				if (request.getParameter("maxprijs").equals("")){
 					maxprijs = 1000000;
 				} else {
 					maxprijs = Integer.parseInt(request.getParameter("maxprijs"));
